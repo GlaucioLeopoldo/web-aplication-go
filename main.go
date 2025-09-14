@@ -2,22 +2,27 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 )
 
 const portNumber = ":8000"
 
 func Home(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "This is the home page")
+	renderTemplate(w, "home.page.tmpl")
 }
 
 func About(w http.ResponseWriter, r *http.Request) {
-	sum := sumatori(2, 2)
-	_, _ = fmt.Fprintf(w, "%s", fmt.Sprintf("This is the about page and 2 + 2 = %d", sum))
+	renderTemplate(w, "about.page.tmpl")
 }
 
-func sumatori(a, b int) int {
-	return a + b
+func renderTemplate(w http.ResponseWriter, path string) {
+	parsedTemplate, _ := template.ParseFiles("./templates/" + path)
+	err := parsedTemplate.Execute(w, nil)
+	if err != nil {
+		fmt.Println("erro ao executar o template", err)
+		return
+	}
 }
 
 func main() {
