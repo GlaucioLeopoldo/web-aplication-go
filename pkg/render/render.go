@@ -26,21 +26,16 @@ func RenderTemplate(w http.ResponseWriter, path string) {
 	} else {
 		tc, _ = CreateTemplateCache()
 	}
-
 	t, ok := tc[path]
 	if !ok {
 		log.Fatal("Alçguma coisa acontecey")
 	}
-
 	buf := new(bytes.Buffer)
-
 	_ = t.Execute(buf, nil)
-
 	_, err := buf.WriteTo(w)
 	if err != nil {
 		fmt.Println("Error getting template cache:", err)
 	}
-
 	parsedTemplate, _ := template.ParseFiles("./templates/" + path)
 	err = parsedTemplate.Execute(w, nil)
 	if err != nil {
@@ -51,7 +46,6 @@ func RenderTemplate(w http.ResponseWriter, path string) {
 
 func CreateTemplateCache() (map[string]*template.Template, error) {
 	myCache := map[string]*template.Template{}
-
 	pages, err := filepath.Glob("./templates/*.page.tmpl")
 	if err != nil {
 		return myCache, err
@@ -62,20 +56,16 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 		if err != nil {
 			return myCache, err
 		}
-
 		matches, err := filepath.Glob("./templates/*.layout.tmpl")
 		if err != nil {
 			return myCache, err
 		}
-
 		if len(matches) > 0 {
 			ts, err = ts.ParseGlob("./templates/*.layout.tmpl")
 		}
-
 		if err != nil {
 			return myCache, err
 		}
-
 		myCache[name] = ts
 	}
 	return myCache, nil
